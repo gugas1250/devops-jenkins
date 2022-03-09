@@ -1,5 +1,4 @@
-sudo useradd paulo
-id paulouser
+echo " theres a problem with sudo command"
 rm -rf new_dir
 mkdir new_dir
 cd new_dir
