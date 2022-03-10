@@ -1,0 +1,46 @@
+---
+ - name: Installing apache server
+   hosts: 192.168.1.101
+   vars:
+     html_message: "This is apache server with command line arg"
+   become: yes
+   tasks:
+     - name: Set Document Root for apache
+       set_fact:
+         doc_root: "/var/www/html/"
+       when: pckg_name == "httpd"
+
+     - name: Set Document Root for nginx
+       set_fact:
+         doc_root: "/usr/share/nginx/html"
+       when: pckg_name == "nginx"
+
+
+     - name: Install epel-release repo
+       yum:
+         name: epel-release
+         state: present
+       when: pckg_name  == "nginx"
+
+     - name: Installing a package
+       yum:
+         name: "{{ pckg_name }}"
+         state: present
+
+     - name: Start and enabled a service
+       service:
+         state: started
+         name: "{{ pckg_name }}"
+         enabled: yes
+
+     - name: Add firewall rule
+       firewalld:
+         state: enabled
+         service: http
+         permanent: yes
+         immediate: yes
+
+     - name: Add index.html file
+       copy:
+         dest: "{{ doc_root }}/index.html"
+         content: "{{ html_message }}"
