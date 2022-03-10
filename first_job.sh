@@ -1,1 +1,1 @@
-mkdir ~/jenkins_chain_job
+mkdir ~/jenkins_chain_job.1
